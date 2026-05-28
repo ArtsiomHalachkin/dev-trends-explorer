@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="8-create-user-watchlist-table" author="devtrends">
+        <createTable tableName="user_watchlist">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="repo_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="9-add-watchlist-primary-key" author="devtrends">
+        <addPrimaryKey tableName="user_watchlist" columnNames="user_id, repo_id"
+                       constraintName="pk_user_watchlist"/>
+    </changeSet>
+
+    <changeSet id="10-add-watchlist-foreign-key" author="devtrends">
+        <addForeignKeyConstraint baseTableName="user_watchlist" baseColumnNames="repo_id"
+                                 constraintName="fk_watchlist_repo"
+                                 referencedTableName="repositories" referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

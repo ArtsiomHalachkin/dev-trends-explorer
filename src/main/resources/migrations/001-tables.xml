@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <!-- 1. Create Independent Tables (Dictionaries) -->
+    <changeSet id="1-create-domains-table" author="devtrends">
+        <createTable tableName="domains">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2-create-languages-table" author="devtrends">
+        <createTable tableName="languages">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3-create-owners-table" author="devtrends">
+        <createTable tableName="owners">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 2. Create Main Repository Table -->
+    <changeSet id="4-create-repositories-table" author="devtrends">
+        <createTable tableName="repositories">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="full_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+
+            <column name="stars" type="INT" defaultValueNumeric="0"/>
+            <column name="forks" type="INT" defaultValueNumeric="0"/>
+            <column name="watchers" type="INT" defaultValueNumeric="0"/>
+            <column name="issues" type="INT" defaultValueNumeric="0"/>
+            <column name="has_wiki" type="BOOLEAN" defaultValueBoolean="false"/>
+
+            <!-- Foreign Key Columns -->
+            <column name="domain_id" type="BIGINT"/>
+            <column name="language_id" type="BIGINT"/>
+            <column name="owner_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <!-- 3. Add Foreign Key Constraints -->
+    <changeSet id="5-add-foreign-keys" author="devtrends">
+        <addForeignKeyConstraint baseTableName="repositories" baseColumnNames="domain_id"
+                                 constraintName="fk_repo_domain"
+                                 referencedTableName="domains" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="repositories" baseColumnNames="language_id"
+                                 constraintName="fk_repo_language"
+                                 referencedTableName="languages" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="repositories" baseColumnNames="owner_id"
+                                 constraintName="fk_repo_owner"
+                                 referencedTableName="owners" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
